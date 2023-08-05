@@ -4,8 +4,12 @@
 # modified: 04 AUG 2023
 # v0.1.0
 
+# Builds an array of tuples containing the path to the python executable and the path to the script to run
+# .
+# @param dirs [String] An array of the executable directories required for MTBL Extract
+# @return scripts [[String, String]] An array of arrays. The first index of the inner array is the PATH of the binary
+#   and the second index is the PATH to the main executable file
 def build_scripts(dirs)
-  """Builds an array of tuples containing the path to the python executable and the path to the script to run"""
   dir_hq = "/Users/Shared/BaseballHQ/tools"
   scripts = []
   dirs.each do |dir|
@@ -14,11 +18,32 @@ def build_scripts(dirs)
   scripts
 end
 
+# Runs a script using the system command
+#
+# @param scripts [[String, String]] An array of arrays. The first index of the inner array is the PATH of the binary
+#   and the second index is the PATH to the main executable file
+# @return none
 def run_scripts(scripts)
-  """Runs a script using the system command"""
-  scripts.each do |dir, script|
-    system(dir, script)
+  threads = []
+  executables = scripts
+  first_two = executables.shift(2)
+  # first two dependencies need to run first on their own thread
+  threads << Thread.new do
+    first_executable = first_two.shift
+    second_executable = first_two.shift
+    system(first_executable[0], first_executable[1])
+    system(second_executable[0], second_executable[1])
   end
+  # remaining executables can run on own threads
+  executables.each do |dir, script|
+    threads << Thread.new do
+      system(dir, script)
+    end
+  end
+
+  # Wait for all threads to complete
+  threads.each(&:join)
+
 end
 
 def main
