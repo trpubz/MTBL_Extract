@@ -25,7 +25,7 @@ end
 #   and the second index is the PATH to the main executable file
 # @return none
 def run_scripts(scripts)
-  progressbar = ProgressBar.create(total: scripts.length, format: '%a %B %p%% %t')
+  progressbar = ProgressBar.create(title: "MTBL", total: scripts.length, format: '%a %B %p%% %t')
   threads = []
   executables = scripts
   first_two = executables.shift(2)
@@ -59,7 +59,7 @@ end
 
 def print_status(step, script)
   program = script.split("/")[-2]
-  puts("---#{step} #{program}")
+  puts("--- #{step} #{program} ---")
 end
 
 def main
