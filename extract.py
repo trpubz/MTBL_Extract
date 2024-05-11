@@ -1,8 +1,8 @@
 # script for MTBL extract pipeline
 # by pubins.taylor
-# v0.1
+# v0.2
 # created 02 JUN 2023
-# lastUpdate 02 JUN 2023
+# lastUpdate 11 MAY 2024
 
 import concurrent.futures
 import subprocess
